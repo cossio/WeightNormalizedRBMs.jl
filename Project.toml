@@ -1,0 +1,12 @@
+name = "WeightNormalizedRBMs"
+uuid = "22ec42ac-8696-41f9-9be6-2703ea0aa0ae"
+authors = ["Jorge Fernandez-de-Cossio-Diaz <j.cossio.diaz@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+RestrictedBoltzmannMachines = "12e6b396-7db5-4506-8cb6-664a4fe1e50e"
+ValueHistories = "98cad3c8-aec3-5f06-8e41-884608649ab7"
+
+[compat]
+julia = "1.6"
