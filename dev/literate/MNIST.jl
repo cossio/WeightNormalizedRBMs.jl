@@ -33,9 +33,9 @@ Load data. Keep only 0, 1 digits for speed.
 Float = Float32
 train_x, train_y = MLDatasets.MNIST.traindata()
 tests_x, tests_y = MLDatasets.MNIST.testdata()
-train_x = Array{Float}(train_x[:, :, train_y .∈ Ref((0,1))] .> 0.5)
-tests_x = Array{Float}(tests_x[:, :, tests_y .∈ Ref((0,1))] .> 0.5)
 selected_digits = (0, 1)
+train_x = Array{Float}(train_x[:, :, train_y .∈ Ref(selected_digits)] .> 0.5)
+tests_x = Array{Float}(tests_x[:, :, tests_y .∈ Ref(selected_digits)] .> 0.5)
 train_y = train_y[train_y .∈ Ref(selected_digits)]
 tests_y = tests_y[tests_y .∈ Ref(selected_digits)]
 train_nsamples = length(train_y)
