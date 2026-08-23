@@ -14,8 +14,8 @@ jobs:
       PYTHON: ""
       DATADEPS_ALWAYS_ACCEPT: true
     steps:
-      - uses: actions/checkout@v2
-      - uses: julia-actions/setup-julia@latest
+      - uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2.8.0
+      - uses: julia-actions/setup-julia@5c9647d97b78a5debe5164e9eec09d653d29bd71 # v2.6.1
         with:
           version: '1'
       - name: Install dependencies
