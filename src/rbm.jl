@@ -34,11 +34,20 @@ Norms of weight patterns attached to each hidden unit.
 """
 weight_norms(rbm::RBM) = sqrt.(sum(abs2, rbm.w; dims=1:ndims(rbm.visible)))
 
+"""
+    ∂free_energy(wrbm, v; wts, moments)
+
+Gradient of `free_energy(RBM(wrbm), v)` with respect to the weight-normalized
+parameterization. Returns a `NamedTuple` with fields `visible`, `hidden`
+(gradients with respect to the layer parameter arrays `layer.par`), and
+`g`, `u` (gradients with respect to the weight norms and directions).
+"""
 function RBMs.∂free_energy(
-    wrbm::WeightNormRBM, v::AbstractArray; wts = nothing,
-    stats = RBMs.sufficient_statistics(wrbm.visible, v; wts)
+    wrbm::WeightNormRBM, v::AbstractArray;
+    wts::AbstractArray{<:Real} = RBMs.uniform_wts(wrbm.visible, v),
+    moments = RBMs.moments_from_samples(wrbm.visible, v; wts)
 )
-    ∂ = RBMs.∂free_energy(RBM(wrbm), v; wts, stats)
+    ∂ = RBMs.∂free_energy(RBM(wrbm), v; wts, moments)
     ∂g, ∂u = ∂wnorm(∂.w, wrbm.g, wrbm.u)
     return (visible = ∂.visible, hidden = ∂.hidden, g = ∂g, u = ∂u)
 end

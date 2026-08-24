@@ -43,7 +43,7 @@ changed (.jl -> .md).
 for (root, dirs, files) in walkdir(literate_dir)
     for file in files
         if endswith(file, ".jl")
-            Literate.markdown(joinpath(root, file), root)
+            Literate.markdown(joinpath(root, file), root; documenter = true)
         end
     end
 end
@@ -60,8 +60,7 @@ Documenter.makedocs(
             "MNIST" => "literate/MNIST.md",
         ],
         "Reference" => "reference.md",
-    ],
-    strict = true
+    ]
 )
 
 #=
