@@ -7,6 +7,10 @@ on:
     tags: [v*]
   pull_request:
 
+permissions:
+  contents: write # Required to push the built docs to the gh-pages branch
+  statuses: write # Required so Documenter can report the deployment status
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,6 +27,9 @@ jobs:
         run: julia --project=docs/ -e 'using Pkg; Pkg.instantiate()'
       - name: Build and deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # For authentication with GitHub Actions token
-          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }} # For authentication with SSH deploy key
+          # Deploy via the Actions token. The repository's DOCUMENTER_KEY SSH deploy
+          # key is no longer valid (deploys failed with "Permission denied (publickey)"),
+          # so it is intentionally not passed here: Documenter prefers DOCUMENTER_KEY
+          # over GITHUB_TOKEN whenever it is set.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: julia --project=docs/ docs/make.jl
