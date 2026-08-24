@@ -33,6 +33,28 @@ end
     end
     @test ∂.g ≈ gs.g
     @test ∂.u ≈ gs.u
-    @test ∂.visible.θ ≈ gs.visible.θ
-    @test ∂.hidden.θ ≈ gs.hidden.θ
+    @test ∂.visible ≈ gs.visible.par
+    @test ∂.hidden ≈ gs.hidden.par
+end
+
+@testset "pcd!" begin
+    Random.seed!(3)
+    rbm = RBMs.BinaryRBM(randn(7), randn(2), randn(7,2) / √7)
+    wrbm = wRBMs.WeightNormRBM(rbm)
+    data = Random.bitrand(7, 128)
+    iters_seen = Int[]
+    state, ps = RBMs.pcd!(
+        wrbm, data;
+        iters = 20, batchsize = 16, steps = 2,
+        callback = (; iter, _...) -> push!(iters_seen, iter)
+    )
+    @test iters_seen == 1:20
+    @test all(isfinite, wrbm.g)
+    @test all(isfinite, wrbm.u)
+    @test all(isfinite, wrbm.visible.par)
+    @test all(isfinite, wrbm.hidden.par)
+    # parameters actually moved
+    @test !(wrbm.u ≈ rbm.w)
+    # the trained model produces finite free energies
+    @test all(isfinite, RBMs.free_energy(RBMs.RBM(wrbm), data))
 end
